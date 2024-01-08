@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import Upload from "./pages/Upload";
 import Products from "./pages/Products";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
