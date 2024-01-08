@@ -85,6 +85,8 @@ export default function Products() {
       .then((resp) => {
         setProducts([...resp.data.products]);
         setPagination(resp.data.pagination);
+        setRatingSort("asc");
+        setPriceSort("asc");
         window.scrollTo({
           top: 0,
           behavior: "smooth",
