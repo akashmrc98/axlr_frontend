@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { removeToken } from "../config/jwt";
+import { removeToken } from "../../config/jwt";
 
 export default function Navbar() {
   const navigate = useNavigate();

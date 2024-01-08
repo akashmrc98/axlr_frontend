@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Button,
@@ -5,22 +6,25 @@ import {
   Flex,
   Grid,
   Heading,
-  Image,
   Input,
   InputGroup,
   InputLeftElement,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 
 import axios from "axios";
-import { FaSearch, FaStar } from "react-icons/fa";
 
+import { FaSearch } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import { authBearerHeader } from "../config/jwt";
 
+import Navbar from "../components/common/Navbar";
+import ProductsGrid from "../components/products/ProductGrid";
+
 export default function Products() {
+  const toast = useToast();
   const limit = 40;
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({
@@ -35,20 +39,15 @@ export default function Products() {
 
   function getProducts() {
     axios
-      .get(
-        `http://localhost:3000/api/v1/products/`,
-        {
-          params: {
-            page,
-            query,
-          },
+      .get(`http://localhost:3000/api/v1/products/`, {
+        params: {
+          page,
+          query,
         },
-        {
-          headers: {
-            Authorization: authBearerHeader(),
-          },
-        }
-      )
+        headers: {
+          Authorization: authBearerHeader(),
+        },
+      })
       .then((resp) => {
         setProducts([...resp.data.products]);
         setPagination(resp.data.pagination);
@@ -57,7 +56,18 @@ export default function Products() {
           behavior: "smooth",
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        toast({
+          title: `Oops!`,
+          description: "Something went wrong, please try again",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+          position: "top",
+          size: "lg",
+        });
+      });
   }
 
   useEffect(() => {
@@ -79,7 +89,7 @@ export default function Products() {
         <Flex justifyContent={"space-between"} alignItems="center">
           <Box px={12} py={6}>
             <Heading>Products</Heading>
-            {products.length < 0 ? <Text> {results} </Text> : null}
+            {pagination.pages.length > 0 ? <Text> {results} </Text> : null}
           </Box>
           <Box w="30%" py={6}>
             <Stack spacing={4}>
@@ -93,7 +103,7 @@ export default function Products() {
                 </InputLeftElement>
                 <Input
                   value={query}
-                  onChange={(e) => setQuery(e.target.value.trim())}
+                  onChange={(e) => setQuery(e.target.value)}
                   size="lg"
                   type="search"
                   placeholder="Search...."
@@ -105,66 +115,7 @@ export default function Products() {
             </Stack>
           </Box>
         </Flex>
-        <Grid>
-          {products.length > 0 ? (
-            <Grid
-              p={12}
-              templateColumns={{
-                base: "1fr",
-                md: "1fr 1fr",
-                lg: "1fr 1fr 1fr",
-                xl: "1fr 1fr 1fr 1fr",
-              }}
-              rowGap="2rem"
-              columnGap={"2rem"}
-              transition="all 400ms ease-in-out"
-            >
-              {products.map((p, i) => (
-                <Box
-                  display={"flex"}
-                  flexDirection="column"
-                  justifyContent="space-between"
-                  p={4}
-                  _hover={{
-                    boxShadow: "xl",
-                    transform: "scale(1.04)",
-                  }}
-                  transition="all 200ms ease-in-out"
-                  boxShadow={"md"}
-                  cursor={"pointer"}
-                  borderRadius="xl"
-                  key={i}
-                >
-                  <Image
-                    p={2}
-                    maxH="200px"
-                    objectFit={"contain"}
-                    src={p.imageUrl}
-                  />
-                  <Box>
-                    <Flex columnGap={".25rem"} alignItems={"center"}>
-                      <FaStar />
-                      {` ${p.rating}`}
-                    </Flex>
-                    <Heading>{p.price}₹</Heading>
-                    <Text fontSize={"sm"}>{p.title.substring(0, 256)}...</Text>
-                  </Box>
-                </Box>
-              ))}
-            </Grid>
-          ) : (
-            <Flex
-              minH="40vh"
-              p={4}
-              alignItems="center"
-              justifyContent={"center"}
-            >
-              <Heading py={4} textAlign={"center"}>
-                {`Oops can't find any items.`}{" "}
-              </Heading>
-            </Flex>
-          )}
-        </Grid>
+        <ProductsGrid products={products} />
         <Divider />
         {pagination.pages.length > 0 ? (
           <Flex my={12} justifyContent={"space-evenly"} alignItems="center">

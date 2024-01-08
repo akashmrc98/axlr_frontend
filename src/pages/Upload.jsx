@@ -1,27 +1,20 @@
 import {
   Box,
   Button,
-  Flex,
   FormControl,
   FormLabel,
   Grid,
   Heading,
   Input,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
   useToast,
 } from "@chakra-ui/react";
+
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa";
-import Navbar from "../components/Navbar";
 import { authBearerHeader } from "../config/jwt";
+
+import Navbar from "../components/common/Navbar";
+import UploadTableComponent from "../components/upload/UploadTableComponent";
 
 export default function Upload() {
   const itemsPerPage = 8;
@@ -49,7 +42,6 @@ export default function Upload() {
     setSelectedFile(file);
   };
   const handleUpload = () => {
-    // Assuming you want to upload the file or perform some action with it
     if (selectedFile) {
       const formData = new FormData();
       formData.append("file", selectedFile);
@@ -70,10 +62,20 @@ export default function Upload() {
             position: "top",
             size: "lg",
           });
-          console.log(res.data);
           setProducts(res.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          toast({
+            title: `Oops!`,
+            description: "Something went wrong, please try again",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+            position: "top",
+            size: "lg",
+          });
+        });
     }
   };
 
@@ -81,9 +83,7 @@ export default function Upload() {
     <Box>
       <Navbar />
       <Grid py={6} px={24}>
-        <Box display={"flex"} columnGap="2rem">
-          <Heading>Upload</Heading>
-        </Box>
+        <Heading>Upload</Heading>
         <Grid py={4}>
           <Box>
             <FormControl>
@@ -96,75 +96,14 @@ export default function Upload() {
           </Box>
         </Grid>
       </Grid>
-      {products.length > 0 ? (
-        <Grid>
-          <TableContainer px={24}>
-            <Table
-              borderRadius={"xl"}
-              boxShadow={"2xl"}
-              variant={"striped"}
-              colorScheme="teal"
-            >
-              <Thead borderRadius={"xl"}>
-                <Tr borderRadius={"xl"}>
-                  {["Title", "Price", "Rating"].map((t, i) => (
-                    <Th key={i}>{t}</Th>
-                  ))}
-                </Tr>
-              </Thead>
-              <Tbody borderRadius={"xl"}>
-                {products.slice(startIndex, endIndex).map((t, i) => (
-                  <Tr borderRadius={"xl"} key={i}>
-                    <Td>{t.title.substring(0, 64)}...</Td>
-                    <Td>{t.price}₹</Td>
-                    <Td>
-                      <Flex alignItems={"center"} columnGap=".24rem">
-                        <Text>{t.rating}</Text>
-                        <FaStar></FaStar>
-                      </Flex>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-
-          <Box my={12}>
-            <Flex justifyContent={"space-evenly"}>
-              <Button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                isDisabled={currentPage === 1}
-                mr={2}
-              >
-                Previous
-              </Button>
-              <Flex columnGap=".4rem" rowGap={".4rem"}>
-                {pages.slice(0, 10).map((p, i) => (
-                  <Text
-                    borderRadius={"xl"}
-                    cursor={"pointer"}
-                    minH="8"
-                    minW="8"
-                    bg={i !== currentPage ? "gray.200" : "black"}
-                    color={i === currentPage ? "gray.200" : "black"}
-                    p={1}
-                    textAlign="center"
-                    key={i}
-                  >
-                    {p}
-                  </Text>
-                ))}
-              </Flex>
-              <Button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                isDisabled={endIndex >= products.length}
-              >
-                Next
-              </Button>
-            </Flex>
-          </Box>
-        </Grid>
-      ) : null}
+      <UploadTableComponent
+        products={products}
+        startIndex={startIndex}
+        endIndex={endIndex}
+        pages={pages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </Box>
   );
 }
