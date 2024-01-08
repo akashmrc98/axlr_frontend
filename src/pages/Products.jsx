@@ -1,31 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
-  Button,
   Divider,
   Flex,
   Grid,
   Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
 
 import axios from "axios";
 
-import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import { authBearerHeader } from "../config/jwt";
+import { authBearerHeader, removeToken } from "../config/jwt";
 
 import Navbar from "../components/common/Navbar";
 import ProductsGrid from "../components/products/ProductGrid";
+import FiltersForm from "../components/products/FilterForm";
+import SearchForm from "../components/products/SearchForm";
+import ProductsPagination from "../components/products/ProductsPagination";
 
 export default function Products() {
-  const toast = useToast();
   const limit = 40;
+
+  const toast = useToast();
+  const navigate = useNavigate();
+
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({
     totalProducts: 1,
@@ -33,9 +34,39 @@ export default function Products() {
     pages: [],
     currentPage: 1,
   });
+  const [rating, setRating] = useState(2);
   const [query, setQuery] = useState("");
+  const [minPrice, setMinPrice] = useState(100);
+  const [maxPrice, setMaxPrice] = useState(300000);
   const [results, setResults] = useState([]);
   const [products, setProducts] = useState([]);
+  const [ratingSort, setRatingSort] = useState("asc");
+  const [priceSort, setPriceSort] = useState("asc");
+
+  function sortByRatings() {
+    let p = products;
+    console.log("ok", ratingSort);
+    if (ratingSort === "asc") {
+      p = products.sort((a, b) => a.rating - b.rating);
+      setProducts([...p]);
+    }
+    if (ratingSort === "desc") {
+      p = products.sort((a, b) => b.rating - a.rating);
+      setProducts([...p]);
+    }
+  }
+
+  function sortByPrice() {
+    let p = products;
+    if (priceSort === "asc") {
+      p = p.sort((a, b) => a.price - b.price);
+      setProducts([...p]);
+    }
+    if (priceSort === "desc") {
+      p = p.sort((a, b) => b.price - a.price);
+      setProducts([...p]);
+    }
+  }
 
   function getProducts() {
     axios
@@ -43,6 +74,9 @@ export default function Products() {
         params: {
           page,
           query,
+          rating,
+          minPrice,
+          maxPrice,
         },
         headers: {
           Authorization: authBearerHeader(),
@@ -56,6 +90,22 @@ export default function Products() {
           behavior: "smooth",
         });
       })
+      .catch((err) => {
+        toast({
+          title: `Oops!`,
+          description: `${err.response.data.message}`,
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+          position: "top",
+          size: "lg",
+        });
+        setTimeout(() => {
+          removeToken();
+          navigate("/");
+        }, 5000);
+      })
+
       .catch((err) => {
         console.log(err);
         toast({
@@ -85,74 +135,50 @@ export default function Products() {
   return (
     <Box>
       <Navbar />
-      <Grid px={4} py={12} h="100%">
-        <Flex justifyContent={"space-between"} alignItems="center">
-          <Box px={12} py={6}>
-            <Heading>Products</Heading>
-            {pagination.pages.length > 0 ? <Text> {results} </Text> : null}
-          </Box>
-          <Box w="30%" py={6}>
-            <Stack spacing={4}>
-              <InputGroup
-                display={"flex"}
-                justifyContent="center"
-                alignItems={"center"}
-              >
-                <InputLeftElement h="100%" pointerEvents="none">
-                  <FaSearch color="gray" size={20} />
-                </InputLeftElement>
-                <Input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  size="lg"
-                  type="search"
-                  placeholder="Search...."
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") getProducts();
-                  }}
-                />
-              </InputGroup>
-            </Stack>
-          </Box>
-        </Flex>
-        <ProductsGrid products={products} />
-        <Divider />
-        {pagination.pages.length > 0 ? (
-          <Flex my={12} justifyContent={"space-evenly"} alignItems="center">
-            <Button
-              onClick={() => setPage(page - 1)}
-              isDisabled={page === 1}
-              mr={2}
-            >
-              Previous
-            </Button>
-            <Flex
-              my={3}
-              justifyContent={"center"}
-              columnGap=".4rem"
-              alignItems={"center"}
-              rowGap={".4rem"}
-            >
-              {pagination.pages.slice(0, 10).map((p, i) => (
-                <Text
-                  borderRadius={"xl"}
-                  cursor={"pointer"}
-                  minH="8"
-                  minW="8"
-                  bg={p !== page ? "gray.200" : "black"}
-                  color={p === page ? "gray.200" : "black"}
-                  p={1}
-                  textAlign="center"
-                  onClick={() => setPage(p)}
-                  key={i}
-                >
-                  {p}
-                </Text>
-              ))}
-            </Flex>
-            <Button onClick={() => setPage(page + 1)}>Next</Button>
+      <Grid
+        gridTemplateColumns={{ base: "1fr ", lg: "2fr 9fr" }}
+        px={4}
+        py={4}
+        h="100%"
+      >
+        <Box mt={24}>
+          <FiltersForm
+            rating={rating}
+            setRating={setRating}
+            maxPrice={maxPrice}
+            minPrice={minPrice}
+            setMaxPrice={setMaxPrice}
+            setMinPrice={setMinPrice}
+            getProducts={getProducts}
+          />
+        </Box>
+        <Box>
+          <Flex justifyContent={"space-evenly"} alignItems="center">
+            <Box>
+              <Heading>Products</Heading>
+              {pagination.pages.length > 0 ? <Text> {results} </Text> : null}
+            </Box>
+            <SearchForm
+              getProducts={getProducts}
+              query={query}
+              setQuery={setQuery}
+              sortByRatings={sortByRatings}
+              ratingSort={ratingSort}
+              setRatingSort={setRatingSort}
+              priceSort={priceSort}
+              setPriceSort={setPriceSort}
+              sortByPrice={sortByPrice}
+            />
           </Flex>
-        ) : null}
+          <Divider mx="auto" w="80%" />
+          <ProductsGrid products={products} />
+          <Divider mx="auto" w="80%" />
+          <ProductsPagination
+            page={page}
+            pagination={pagination}
+            setPage={setPage}
+          />
+        </Box>
       </Grid>
     </Box>
   );

@@ -10,15 +10,18 @@ import {
 } from "@chakra-ui/react";
 
 import axios from "axios";
+import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import { authBearerHeader } from "../config/jwt";
+import { authBearerHeader, removeToken } from "../config/jwt";
 
 import Navbar from "../components/common/Navbar";
 import UploadTableComponent from "../components/upload/UploadTableComponent";
 
 export default function Upload() {
   const itemsPerPage = 8;
+
   const toast = useToast();
+  const navigate = useNavigate();
 
   const [pages, setPages] = useState([]);
   const [products, setProducts] = useState([]);
@@ -63,6 +66,21 @@ export default function Upload() {
             size: "lg",
           });
           setProducts(res.data.data);
+        })
+        .catch((err) => {
+          toast({
+            title: `Oops!`,
+            description: `${err.response.data.message}`,
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+            position: "top",
+            size: "lg",
+          });
+          setTimeout(() => {
+            removeToken();
+            navigate("/");
+          }, 5000);
         })
         .catch((err) => {
           console.log(err);

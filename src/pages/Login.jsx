@@ -7,11 +7,11 @@ import {
   Input,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 
-import { setToken } from "../config/jwt";
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { removeToken, setToken } from "../config/jwt";
 
 export default function Login() {
   const toast = useToast();
@@ -41,11 +41,26 @@ export default function Login() {
         }
       })
       .catch((err) => {
+        toast({
+          title: `Oops!`,
+          description: `${err.response.data.message}`,
+          status: "warning",
+          duration: 4000,
+          isClosable: true,
+          position: "top",
+          size: "lg",
+        });
+        setTimeout(() => {
+          removeToken();
+          navigate("/");
+        }, 5000);
+      })
+      .catch((err) => {
         console.log(err);
         return toast({
-          title: `Invalid Credentails`,
-          description: "please enter valid credentials",
-          status: "warning",
+          title: `Internal Server Error`,
+          description: "please try again later",
+          status: "error",
           duration: 9000,
           isClosable: true,
           position: "top",

@@ -42,10 +42,11 @@ export default function ProductsGrid({ products }) {
                 src={p.imageUrl}
               />
               <Flex flexDir={"column"} rowGap=".4rem">
-                <Flex>
+                <Flex alignItems={"center"} columnGap="1rem">
                   <Text
                     display={"flex"}
-                    boxShadow={"xl"}
+                    boxShadow={"dark-lg"}
+                    borderRadius="md"
                     px={2}
                     columnGap={".25rem"}
                     alignItems={"center"}
@@ -53,8 +54,8 @@ export default function ProductsGrid({ products }) {
                     <FaStar />
                     {` ${p.rating}`}
                   </Text>
+                  <Heading fontSize={{ base: "2xl" }}>{p.price}₹</Heading>
                 </Flex>
-                <Heading>{p.price}₹</Heading>
                 <Text fontWeight={"500"} fontSize={"sm"}>
                   {p.title.substring(0, 256)}...
                 </Text>
