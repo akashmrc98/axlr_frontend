@@ -42,6 +42,7 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [ratingSort, setRatingSort] = useState("asc");
   const [priceSort, setPriceSort] = useState("asc");
+  const [priceRange, setPriceRange] = useState({ min: [], max: [] });
 
   function sortByRatings() {
     let p = products;
@@ -85,6 +86,7 @@ export default function Products() {
       .then((resp) => {
         setProducts([...resp.data.products]);
         setPagination(resp.data.pagination);
+        setPriceRange(resp.data.priceRange);
         setRatingSort("asc");
         setPriceSort("asc");
         window.scrollTo({
@@ -145,6 +147,7 @@ export default function Products() {
       >
         <Box mt={24}>
           <FiltersForm
+            priceRange={priceRange}
             rating={rating}
             setRating={setRating}
             maxPrice={maxPrice}

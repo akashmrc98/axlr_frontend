@@ -4,10 +4,10 @@ import {
   FormLabel,
   Stack,
   Flex,
-  Input,
   Button,
   Box,
   Divider,
+  Select,
 } from "@chakra-ui/react";
 import { FaStar } from "react-icons/fa";
 
@@ -20,27 +20,35 @@ export default function FiltersForm({
   setMaxPrice,
   getProducts,
 }) {
+  const priceRange = [
+    150, 250, 500, 1000, 1500, 2500, 5000, 10000, 15000, 25000,
+  ];
   return (
     <Stack py={8} spacing={2}>
       <FormControl>
         <FormLabel>Price</FormLabel>
         <Flex columnGap={"1rem"}>
-          <Input
+          <Select
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
-            placeholder="min price"
-            size="sm"
-            max={250000}
-            type="number"
-          ></Input>
-          <Input
+          >
+            {priceRange.slice(0, 5).map((v, i) => (
+              <option key={i} value={v}>
+                {v}
+              </option>
+            ))}
+          </Select>
+
+          <Select
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
-            placeholder="max price"
-            size="sm"
-            min={400}
-            text="number"
-          ></Input>
+          >
+            {priceRange.slice(6, 10).map((v, i) => (
+              <option key={i} value={v}>
+                {v}
+              </option>
+            ))}
+          </Select>
         </Flex>
       </FormControl>
       <Button onClick={getProducts} size="sm">

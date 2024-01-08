@@ -1,6 +1,5 @@
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 const TOKEN_BEARER = import.meta.env.VITE_TOKEN_BEARER;
-console.log(TOKEN_BEARER, TOKEN_BEARER, import.meta.env);
 
 export const setToken = (token) => {
   localStorage.setItem(TOKEN_KEY, token);
