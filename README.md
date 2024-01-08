@@ -1,8 +1,31 @@
-# React + Vite
+# Your Project Name
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+Briefly describe your project and its main functionalities.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
+1. [Getting Started](#getting-started)
+   - [Prerequisites](#prerequisites)
+   - [Installation](#installation)
+   - [Run the Application](#run-the-application)
+2. [Functionalities](#functionalities)
+   - [1. User Authentication](#1-user-authentication)
+   - [2. Product Upload](#2-product-upload)
+   - [3. Custom Search](#3-custom-search)
+
+
+### Prerequisites
+
+Make sure you have Node.js and npm installed on your machine.
+
+### Installation
+
+1. Install all dependencies
+   ```bash
+   npm install
+
+2. Run 
+   ```bash
+   npm run dev
+   
