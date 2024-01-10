@@ -20,24 +20,34 @@ export default function ProductsPagination({ pagination, setPage, page }) {
             alignItems={"center"}
             rowGap={".4rem"}
           >
-            {pagination.pages.slice(0, 10).map((p, i) => (
-              <Text
-                borderRadius={"xl"}
-                cursor={"pointer"}
-                minH="8"
-                minW="8"
-                bg={p !== page ? "gray.200" : "black"}
-                color={p === page ? "gray.200" : "black"}
-                p={1}
-                textAlign="center"
-                onClick={() => setPage(p)}
-                key={i}
-              >
-                {p}
-              </Text>
-            ))}
+            {pagination.pages
+              .slice(
+                pagination.currentPage > 5 ? pagination.currentPage - 4 : 0,
+                pagination.currentPage + 10
+              )
+              .map((p, i) => (
+                <Text
+                  borderRadius={"xl"}
+                  cursor={"pointer"}
+                  minH="8"
+                  minW="8"
+                  bg={p !== page ? "gray.200" : "black"}
+                  color={p === page ? "gray.200" : "black"}
+                  p={1}
+                  textAlign="center"
+                  onClick={() => setPage(p)}
+                  key={i}
+                >
+                  {p}
+                </Text>
+              ))}
           </Flex>
-          <Button onClick={() => setPage(page + 1)}>Next</Button>
+          <Button
+            isDisabled={pagination.currentPage === pagination.totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+          </Button>
         </Flex>
       ) : null}
     </>

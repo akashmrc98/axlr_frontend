@@ -15,6 +15,7 @@ export default function SearchForm({
   query,
   setQuery,
   getProducts,
+  getPagination,
   priceSort,
   setPriceSort,
   sortByPrice,
@@ -39,7 +40,10 @@ export default function SearchForm({
           type="search"
           placeholder="Search...."
           onKeyDown={(e) => {
-            if (e.key === "Enter") getProducts();
+            if (e.key === "Enter") {
+              getProducts();
+              getPagination();
+            }
           }}
         />
       </InputGroup>

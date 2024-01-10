@@ -19,6 +19,7 @@ export default function FiltersForm({
   setMinPrice,
   setMaxPrice,
   getProducts,
+  getPagination,
 }) {
   const priceRange = [
     150, 250, 500, 1000, 1500, 2500, 5000, 10000, 15000, 25000,
@@ -51,7 +52,13 @@ export default function FiltersForm({
           </Select>
         </Flex>
       </FormControl>
-      <Button onClick={getProducts} size="sm">
+      <Button
+        onClick={() => {
+          getPagination();
+          getProducts();
+        }}
+        size="sm"
+      >
         Search
       </Button>
       <Divider my={4} />
