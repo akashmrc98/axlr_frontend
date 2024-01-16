@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   FormControl,
   FormLabel,
@@ -11,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FaStar } from "react-icons/fa";
 
-export default function FiltersForm({
+export default function ProductsFiltersForm({
   rating,
   setRating,
   minPrice,

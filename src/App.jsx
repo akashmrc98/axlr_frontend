@@ -1,13 +1,18 @@
+import { Provider } from 'react-redux'
 import { ChakraProvider } from "@chakra-ui/react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import { store } from './store/store';
 import { theme } from "./config/theme";
 
 import Login from "./pages/Login";
-import Upload from "./pages/Upload";
-import Products from "./pages/Products";
 import NotFound from "./pages/NotFound";
+
+import Upload from "./pages/Upload";
+import Products from "./pages/Products/Products";
+
 import ProtectedRoute from "./components/common/ProtectedRoute";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
@@ -30,9 +35,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <ChakraProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <Provider store={store}>
+      <ChakraProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </Provider>
   );
 }
 

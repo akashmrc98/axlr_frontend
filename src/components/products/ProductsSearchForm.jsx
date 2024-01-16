@@ -11,7 +11,7 @@ import {
 import { FaSearch } from "react-icons/fa";
 import { GoSortAsc, GoSortDesc } from "react-icons/go";
 
-export default function SearchForm({
+export default function ProductsSearchForm({
   query,
   setQuery,
   getProducts,
