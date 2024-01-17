@@ -15,24 +15,24 @@ import { removeToken, setToken } from "../config/jwt";
 
 export default function Login() {
   const toast = useToast();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
+  const [form, setForm] = useState({
+    email: "",
+    password: ""
+  })
   const navigate = useNavigate();
 
-  function onEmailChange(e) {
-    setEmail(e.target.value);
+  function handleChange(e) {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
   }
 
-  function onPasswordChange(e) {
-    setPassword(e.target.value);
-  }
 
   function login() {
     axios
-      .post("http://localhost:3000/api/v1/users/login", {
-        email: email,
-        password: password,
-      })
+      .post("http://localhost:3000/api/v1/users/login", { ...form })
       .then((resp) => {
         const data = resp.data;
         if (!data.error) {
@@ -74,11 +74,11 @@ export default function Login() {
       <Grid p={6} rowGap={".5rem"}>
         <FormControl>
           <FormLabel>Email</FormLabel>
-          <Input value={email} onChange={onEmailChange} type="email" />
+          <Input name="email" value={form.email} onChange={handleChange} type="email" />
         </FormControl>
         <FormControl>
           <FormLabel>Password</FormLabel>
-          <Input value={password} onChange={onPasswordChange} type="password" />
+          <Input name="password" value={form.password} onChange={handleChange} type="password" />
         </FormControl>
         <Button onClick={login} mt={4} size="lg">
           Login

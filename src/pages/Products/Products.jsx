@@ -1,13 +1,14 @@
-import { Box, Divider, Grid, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Grid, Text } from "@chakra-ui/react";
 
 import ProductsListComponent from "../../components/products/ProductsListComponent";
 import ProductsFiltersForm from "../../components/products/ProductsFilterForm";
+import ProductsSearchForm from "../../components/products/ProductsSearchForm";
 import ProductsPagination from "../../components/products/ProductsPagination";
 import Navbar from "../../components/common/Navbar";
 
 import { useProductsHooks } from "./useProductsHook";
-import { useProductsPaginationHook } from "./useProductsPaginationHook";
 import { useSelector } from 'react-redux'
+import ProductsSortingComponent from "../../components/products/ProductsSortingComponent";
 
 
 export default function Products() {
@@ -16,16 +17,11 @@ export default function Products() {
   const pagination = useSelector((state) => state.products.pagination)
   const filters = useSelector((state) => state.products.filters)
 
+  const resultsLabel = `Showing page ${pagination.currentPage} - ${pagination.totalPages}, ${pagination.currentPage * LIMIT - 39}-${pagination.totalPages * LIMIT
+    } Results of ${pagination.pages.length * LIMIT}.`
+
 
   useProductsHooks({
-    page: pagination.currentPage,
-    query: filters.query,
-    rating: filters.rating,
-    minPrice: filters.minPrice,
-    maxPrice: filters.maxPrice
-  })
-
-  useProductsPaginationHook({
     page: pagination.currentPage,
     query: filters.query,
     rating: filters.rating,
@@ -46,10 +42,13 @@ export default function Products() {
           <ProductsFiltersForm />
         </Box>
         <Box>
-          <Text>
-            {`Showing page ${pagination.currentPage} - ${pagination.totalPages}, ${pagination.currentPage * LIMIT - 39}-${pagination.totalPages * LIMIT
-              } Results of ${pagination.pages.length * LIMIT}.`}
-          </Text>
+          <Flex px={6} justifyContent={"space-between"}>
+            <Text>{resultsLabel}</Text>
+            <Box>
+              <ProductsSearchForm />
+              <ProductsSortingComponent />
+            </Box>
+          </Flex>
           <Divider mx="auto" w="80%" />
           <ProductsListComponent />
         </Box>

@@ -8,18 +8,39 @@ import {
   Divider,
   Select,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 
-export default function ProductsFiltersForm({
-  rating,
-  setRating,
-  minPrice,
-  maxPrice,
-  setMinPrice,
-  setMaxPrice,
-  getProducts,
-  getPagination,
-}) {
+import { useDispatch, useSelector } from "react-redux";
+import { filterProducts } from "../../pages/Products/ProductsSlice";
+
+export default function ProductsFiltersForm() {
+
+  const dispatch = useDispatch()
+  const filters = useSelector((state) => state.products.filters)
+  console.log(filters)
+
+  const [rating, setRating] = useState(2)
+  const [form, setForm] = useState({
+    minPrice: null,
+    maxPrice: null
+  })
+  function handleChange(e) {
+    setForm({
+      ...form,
+      [e.target.name]: Number(e.target.value)
+    })
+  }
+
+  function search() {
+    const d = {
+      ...filters,
+      ...form,
+      rating
+    }
+    dispatch(filterProducts(d))
+  }
+
   const priceRange = [
     150, 250, 500, 1000, 1500, 2500, 5000, 10000, 15000, 25000,
   ];
@@ -29,8 +50,9 @@ export default function ProductsFiltersForm({
         <FormLabel>Price</FormLabel>
         <Flex columnGap={"1rem"}>
           <Select
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
+            name="minPrice"
+            value={form.minPrice}
+            onChange={(e) => handleChange(e)}
           >
             {priceRange.slice(0, 5).map((v, i) => (
               <option key={i} value={v}>
@@ -40,8 +62,9 @@ export default function ProductsFiltersForm({
           </Select>
 
           <Select
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
+            name="maxPrice"
+            value={form.maxPrice}
+            onChange={(e) => handleChange(e)}
           >
             {priceRange.slice(6, 10).map((v, i) => (
               <option key={i} value={v}>
@@ -51,15 +74,9 @@ export default function ProductsFiltersForm({
           </Select>
         </Flex>
       </FormControl>
-      <Button
-        onClick={() => {
-          getPagination();
-          getProducts();
-        }}
-        size="sm"
-      >
+      <Button onClick={search} size="sm">
         Search
-      </Button>
+      </Button >
       <Divider my={4} />
       <FormControl>
         <FormLabel>Rating</FormLabel>
@@ -67,8 +84,8 @@ export default function ProductsFiltersForm({
           {[4, 3, 2, 1].map((s, i) => (
             <Box
               onClick={() => {
-                setRating(s);
-                getProducts();
+                setRating(s)
+                search()
               }}
               cursor={"pointer"}
               rowGap=".5rem"
@@ -91,6 +108,6 @@ export default function ProductsFiltersForm({
           ))}
         </Flex>
       </FormControl>
-    </Stack>
+    </Stack >
   );
 }
