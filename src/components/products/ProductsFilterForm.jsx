@@ -18,12 +18,11 @@ export default function ProductsFiltersForm() {
 
   const dispatch = useDispatch()
   const filters = useSelector((state) => state.products.filters)
-  console.log(filters)
 
   const [rating, setRating] = useState(2)
   const [form, setForm] = useState({
-    minPrice: null,
-    maxPrice: null
+    minPrice: 0,
+    maxPrice: 100000
   })
   function handleChange(e) {
     setForm({

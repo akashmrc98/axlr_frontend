@@ -6,7 +6,7 @@ import { loadPagination } from "../../pages/Products/ProductsSlice";
 export default function ProductsPagination() {
 
   const dispatch = useDispatch()
-  const pagination = useSelector((state) => state.products.pagination)
+  const pagination = useSelector((state) => state.products.pagination.data)
 
   function prevPage() {
     if (pagination.currentPage > 1)
@@ -44,8 +44,8 @@ export default function ProductsPagination() {
               >
                 {pagination.pages
                   .slice(
-                    pagination.currentPage > 5 ? pagination.currentPage - 4 : 0,
-                    pagination.currentPage + 10
+                    pagination.currentPage > 5 ? pagination.currentPage - 5 : 0,
+                    pagination.currentPage > 10 ? pagination.currentPage + 5 : 10
                   )
                   .map((p, i) => (
                     <Text

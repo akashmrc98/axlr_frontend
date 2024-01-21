@@ -1,20 +1,33 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { combineSlices, createSlice } from '@reduxjs/toolkit'
+
+const commonDataBuilder = (data) => {
+  return {
+    data: data,
+    error: {
+      error: false,
+      message: null,
+      status: null,
+      optional: null
+    }
+  }
+}
+
 
 const productsSlice = createSlice({
   name: 'products',
   initialState: {
-    products: [],
+    products: commonDataBuilder([]),
+    pagination: commonDataBuilder({
+      totalProducts: null,
+      totalPages: null,
+      pages: [],
+      currentPage: 1,
+    }),
     filters: {
       query: null,
       rating: null,
       minPrice: null,
       maxPrice: null,
-    },
-    pagination: {
-      totalProducts: null,
-      totalPages: null,
-      pages: [],
-      currentPage: 1,
     },
     sort: {
       price: "asc",
@@ -23,11 +36,24 @@ const productsSlice = createSlice({
   },
   reducers: {
     loadProducts: (state, actions) => {
-      return { ...state, products: [...actions.payload] }
+      return { ...state, products: { data: [...actions.payload] } }
+    },
+    productsErrorHandler: (state, actions) => {
+      return {
+        ...state, products: {
+          ...state.products,
+          error: {
+            error: true,
+            status: actions.payload.status,
+            message: actions.payload.message,
+            optional: actions.payload.err
+          }
+        }
+      }
     },
     loadPagination: (state, actions) => {
       return {
-        ...state, pagination: { ...actions.payload }
+        ...state, pagination: { data: { ...actions.payload } }
       }
     },
     filterProducts: (state, actions) => {
@@ -54,7 +80,7 @@ const productsSlice = createSlice({
           ...state.sort,
           price: actions.payload,
         },
-        products: [...products]
+        products: { data: [...products] }
       }
     },
     sortProductsByRatings: (state, actions) => {
@@ -75,11 +101,11 @@ const productsSlice = createSlice({
           ...state.sort,
           rating: actions.payload,
         },
-        products: [...products]
+        products: { data: [...products] }
       }
     },
   },
 })
 
-export const { loadProducts, loadPagination, filterProducts, sortProductsByPrice, sortProductsByRatings } = productsSlice.actions
+export const { loadProducts, loadPagination, filterProducts, sortProductsByPrice, sortProductsByRatings, productsErrorHandler } = productsSlice.actions
 export default productsSlice.reducer

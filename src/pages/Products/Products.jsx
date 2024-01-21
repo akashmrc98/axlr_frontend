@@ -1,27 +1,37 @@
 import { Box, Divider, Flex, Grid, Text } from "@chakra-ui/react";
 
+import ProductsSortingComponent from "../../components/products/ProductsSortingComponent";
 import ProductsListComponent from "../../components/products/ProductsListComponent";
 import ProductsFiltersForm from "../../components/products/ProductsFilterForm";
 import ProductsSearchForm from "../../components/products/ProductsSearchForm";
 import ProductsPagination from "../../components/products/ProductsPagination";
 import Navbar from "../../components/common/Navbar";
 
-import { useProductsHooks } from "./useProductsHook";
 import { useSelector } from 'react-redux'
-import ProductsSortingComponent from "../../components/products/ProductsSortingComponent";
+
+import { useProducts } from "./useProducts";
+import { useProductsPagination } from "./useProductsPagination";
+import ProductsLoader from "../../components/products/ProductsLoader";
 
 
 export default function Products() {
 
   const LIMIT = 40
-  const pagination = useSelector((state) => state.products.pagination)
+  const pagination = useSelector((state) => state.products.pagination.data)
   const filters = useSelector((state) => state.products.filters)
 
   const resultsLabel = `Showing page ${pagination.currentPage} - ${pagination.totalPages}, ${pagination.currentPage * LIMIT - 39}-${pagination.totalPages * LIMIT
     } Results of ${pagination.pages.length * LIMIT}.`
 
+  const { loading } = useProducts({
+    page: pagination.currentPage,
+    query: filters.query,
+    rating: filters.rating,
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice
+  })
 
-  useProductsHooks({
+  useProductsPagination({
     page: pagination.currentPage,
     query: filters.query,
     rating: filters.rating,
@@ -50,7 +60,8 @@ export default function Products() {
             </Box>
           </Flex>
           <Divider mx="auto" w="80%" />
-          <ProductsListComponent />
+          {loading ? <ProductsLoader /> : <ProductsListComponent />}
+
         </Box>
         <Divider mx="auto" w="80%" />
         <ProductsPagination />

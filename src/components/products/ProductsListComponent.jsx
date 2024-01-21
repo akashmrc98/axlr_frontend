@@ -5,7 +5,7 @@ import ProductCardComponent from "./ProductCardComponent";
 
 export default function ProductsListComponent() {
 
-  const products = useSelector((state) => state.products.products)
+  const products = useSelector((state) => state.products.products.data)
 
   return (
     <Grid>
