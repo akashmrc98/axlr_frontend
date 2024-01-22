@@ -1,7 +1,7 @@
 
-export class ProductsApi {
+export class ProductSorting {
 
-  static sortProductsByPrice(products, order) {
+  static byPrice(products, order) {
     if (order === "asc")
       products.sort((a, b) => {
         return a.price - b.price
@@ -13,7 +13,7 @@ export class ProductsApi {
     return products
   }
 
-  static sortProductsByRating(products, order) {
+  static byRating(products, order) {
     if (order === "asc")
       products.sort((a, b) => {
         return a.rating - b.rating

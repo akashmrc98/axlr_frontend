@@ -1,15 +1,14 @@
 import { Box, Divider, Flex, Grid, } from "@chakra-ui/react";
 
-import ProductsSortingComponent from "../../components/products/ProductsSortingComponent";
+import Navbar from "../../components/common/Navbar";
+import ProductsLoader from "../../components/products/ProductsLoader";
+import ProductsSearchForm from "../../components/products/ProductsSearchForm";
+import ProductsPagination from "../../components/products/ProductsPagination";
 import ProductsFiltersForm from "../../components/products/ProductsFilterForm";
 import ProductCountComponent from "../../components/products/ProductCountComponent";
 import ProductsListComponent from "../../components/products/ProductsListComponent";
-import ProductsPagination from "../../components/products/ProductsPagination";
-import ProductsSearchForm from "../../components/products/ProductsSearchForm";
-import Navbar from "../../components/common/Navbar";
-
-
-import ProductsLoader from "../../components/products/ProductsLoader";
+import ProductsSortingComponent from "../../components/products/ProductsSortingComponent";
+import ProductsCategoryComponent from "../../components/products/ProductsCategoryComponent";
 
 import { useProductsQuery } from "./useProductsQuery";
 import { useProductsPaginationQuery } from "./useProductsPaginationQuery";
@@ -28,7 +27,12 @@ export default function Products() {
         py={4}
         h="100%"
       >
-        {products.status === "success" && <ProductsFiltersForm />}
+        {products.status === "success" &&
+          <Box>
+            <ProductsFiltersForm />
+            <ProductsCategoryComponent />
+          </Box>
+        }
         <Box>
           <Flex w="80%" mx="auto" alignItems={"center"} justifyContent={"space-between"}>
             {products.status === "success" && <ProductCountComponent />}

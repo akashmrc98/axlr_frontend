@@ -9,7 +9,6 @@ export const useProductsPaginationQuery = () => {
   const { pagination, filters, setPagination } = useProductStore((state) => state)
 
   return useQuery({
-    suspense: false,
     initialData: { ...pagination },
     queryKey: ['pagination', filters],
     queryFn: async ({ signal }) => {
@@ -20,9 +19,9 @@ export const useProductsPaginationQuery = () => {
             query: filters.query,
             rating: filters.rating,
             minPrice: filters.minPrice,
-            maxPrice: filters.maxPrice
+            maxPrice: filters.maxPrice,
+            category: filters.category
           }
-
           const response = await axios
             .get(`http://localhost:3000/api/v1/products/pagination`, {
               params,

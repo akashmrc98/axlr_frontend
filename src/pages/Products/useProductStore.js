@@ -13,6 +13,7 @@ export const useProductStore = create((set) => ({
     rating: null,
     minPrice: null,
     maxPrice: null,
+    category: null
   },
   sort: {
     price: null,

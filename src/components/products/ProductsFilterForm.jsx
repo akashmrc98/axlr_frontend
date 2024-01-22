@@ -3,16 +3,14 @@ import {
   FormLabel,
   Stack,
   Flex,
-  Button,
   Box,
   Divider,
-  Select,
   RangeSlider,
   RangeSliderTrack,
   RangeSliderFilledTrack,
   RangeSliderThumb,
-  RangeSliderMark,
 } from "@chakra-ui/react";
+
 
 
 import { FaStar } from "react-icons/fa";
@@ -37,12 +35,10 @@ export default function ProductsFiltersForm() {
       minPrice: minPrice,
       maxPrice: maxPrice,
     })
-  }
-
-  function search() {
     setFilters({
       ...filters,
-      ...form,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
       rating
     })
   }
@@ -63,7 +59,7 @@ export default function ProductsFiltersForm() {
           defaultValue={[1, 30]}
           onChangeStart={handleMinMaxChange}
           onChangeEnd={handleMinMaxChange}
-          step={1}
+          step={.25}
           min={.25}
         >
           <RangeSliderTrack>
@@ -78,11 +74,6 @@ export default function ProductsFiltersForm() {
         </RangeSlider>
         <FormLabel >Price</FormLabel>
       </FormControl>
-
-
-      <Button onClick={search} size="sm">
-        Search
-      </Button >
       <Divider my={4} />
       <FormControl>
         <FormLabel>Rating</FormLabel>
@@ -114,6 +105,10 @@ export default function ProductsFiltersForm() {
           ))}
         </Flex>
       </FormControl>
+
+
     </Stack >
   );
 }
+
+

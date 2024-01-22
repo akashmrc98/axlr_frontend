@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Flex, Tag } from "@chakra-ui/react";
 import { GoSortAsc, GoSortDesc } from 'react-icons/go'
 
-import { ProductsApi } from '../../pages/Products/ProductsApi'
+import { ProductSorting } from '../../pages/Products/ProductSorting'
 import { useProductStore } from "../../pages/Products/useProductStore";
 
 
@@ -18,14 +18,14 @@ export default function ProductsSortingComponent() {
     if (priceSort === "asc") setPriceSort("desc");
     else if (priceSort === "desc") setPriceSort("asc");
     else setPriceSort("asc");
-    setProducts(ProductsApi.sortProductsByPrice(products, priceSort))
+    setProducts(ProductSorting.byPrice(products, priceSort))
 
   }
   function sortByRatings() {
     if (ratingSort === "asc") setRatingSort("desc");
     else if (ratingSort === "desc") setRatingSort("asc");
     else setRatingSort("asc");
-    setProducts(ProductsApi.sortProductsByRating(products, ratingSort))
+    setProducts(ProductSorting.byRating(products, ratingSort))
   }
 
   return <Flex columnGap={".5rem"} alignItems="center">
