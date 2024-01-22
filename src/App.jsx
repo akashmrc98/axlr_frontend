@@ -4,8 +4,8 @@ import { theme } from "./config/theme";
 
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import Upload from "./pages/Upload";
 import Products from "./pages/Products/Products";
+import ProductsUpload from "./pages/ProductsUpload/ProductsUpload";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/upload",
-    element: <ProtectedRoute element={<Upload />} />,
+    element: <ProtectedRoute element={<ProductsUpload />} />,
   },
 ]);
 
@@ -39,7 +39,6 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-
         <RouterProvider router={router} />
         <ReactQueryDevtools />
       </QueryClientProvider>

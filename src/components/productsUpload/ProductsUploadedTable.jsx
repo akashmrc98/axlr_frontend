@@ -12,10 +12,19 @@ import {
 
 import { FaStar } from "react-icons/fa";
 
-export default function ProductsUploadedTable({ products }) {
+import { useProductUploadStore } from "../../pages/ProductsUpload/useProductsUploadStore";
+
+export default function ProductsUploadedTable() {
+
+  const { products, pagination: { currentPage } } = useProductUploadStore((state) => state)
+  const LIMIT = 8;
+
+  let productsTemp = products
+  productsTemp = productsTemp.slice(currentPage * LIMIT - 7, currentPage * LIMIT)
+
   return (
     <>
-      {products.length > 0 ? (
+      {productsTemp.length > 0 ? (
         <TableContainer px={24}>
           <Table
             borderRadius={"xl"}
@@ -31,7 +40,7 @@ export default function ProductsUploadedTable({ products }) {
               </Tr>
             </Thead>
             <Tbody borderRadius={"xl"}>
-              {products.map((t, i) => (
+              {productsTemp.map((t, i) => (
                 <Tr borderRadius={"xl"} key={i}>
                   <Td>{t.title.substring(0, 64)}...</Td>
                   <Td>{t.price}₹</Td>

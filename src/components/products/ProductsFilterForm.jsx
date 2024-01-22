@@ -26,7 +26,7 @@ export default function ProductsFiltersForm() {
   const [rating, setRating] = useState(2)
   const [form, setForm] = useState({
     minPrice: 150,
-    maxPrice: 499999
+    maxPrice: 5000
   })
   function handleMinMaxChange(e) {
     const minPrice = Math.round(49999 * (Number(e[0]) / 100))

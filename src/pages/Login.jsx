@@ -41,9 +41,11 @@ export default function Login() {
         }
       })
       .catch((err) => {
+
+        console.log(err)
         toast({
           title: `Oops!`,
-          description: `${err.response.data.message}`,
+          // description: `${err.response.data.message}`,
           status: "warning",
           duration: 4000,
           isClosable: true,
