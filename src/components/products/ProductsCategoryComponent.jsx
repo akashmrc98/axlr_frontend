@@ -29,21 +29,30 @@ export default function ProductsCategoryComponent() {
         <Accordion allowToggle={true} allowMultiple={false} key={index}>
           <AccordionItem>
             <h2>
-              <AccordionButton >
+              <AccordionButton onClick={
+                () => {
+                  if (category.title === "All") {
+                    setCategory("")
+                  }
+                }
+
+              } bg={filters.category === category.title ? "gray.100" : 'none'} >
                 <Box as="span" flex='1' textAlign='left'>
                   {category.title}
                 </Box>
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4}>
-              <Grid justifyContent={"flex-start"}>
-                {category.options.map((option, i) =>
-                  <Link onClick={() => setCategory(option)} key={i} variant="link">{option}</Link>)
-                }
-              </Grid>
+            {category.options.map((option, i) =>
+              <AccordionPanel
+                bg={option === filters.category ? 'gray.100' : 'transparent'}
+                key={i} pb={4}>
+                <Grid justifyContent={"flex-start"}>
+                  <Link onClick={() => setCategory(option)} key={i} variant="link">{option}</Link>
+                </Grid>
 
-            </AccordionPanel>
+              </AccordionPanel>
+            )}
           </AccordionItem>
         </Accordion>
       )}
@@ -53,7 +62,9 @@ export default function ProductsCategoryComponent() {
 }
 
 const categories = [
+  { title: `All`, options: [] },
   {
+
     title: `Audio & Video`,
     options: [
       `TV`,
@@ -65,7 +76,7 @@ const categories = [
   {
     title: `Computers`,
     options: [
-      `Laptops`,
+      `Laptop`,
       `Gaming`,
       `Games`,
       `Accessories`,
