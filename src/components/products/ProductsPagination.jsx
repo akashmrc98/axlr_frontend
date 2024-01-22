@@ -1,25 +1,24 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
 
-import { useDispatch, useSelector, } from "react-redux";
-import { loadPagination } from "../../pages/Products/ProductsSlice";
+import { useProductStore } from "../../pages/Products/useProductStore";
 
 export default function ProductsPagination() {
 
-  const dispatch = useDispatch()
-  const pagination = useSelector((state) => state.products.pagination.data)
+  const pagination = useProductStore((state) => state.pagination)
+  const setPagination = useProductStore((state) => state.setPagination)
 
   function prevPage() {
     if (pagination.currentPage > 1)
-      dispatch(loadPagination({ ...pagination, currentPage: pagination.currentPage - 1 }))
+      setPagination({ ...pagination, currentPage: pagination.currentPage - 1 })
   }
 
   function nextPage() {
     if (pagination.currentPage < pagination.totalPages)
-      dispatch(loadPagination({ ...pagination, currentPage: pagination.currentPage + 1 }))
+      setPagination({ ...pagination, currentPage: pagination.currentPage + 1 })
   }
 
   function setPage(page) {
-    dispatch(loadPagination({ ...pagination, currentPage: page }))
+    setPagination({ ...pagination, currentPage: page })
   }
 
   return (
@@ -45,7 +44,7 @@ export default function ProductsPagination() {
                 {pagination.pages
                   .slice(
                     pagination.currentPage > 5 ? pagination.currentPage - 5 : 0,
-                    pagination.currentPage > 10 ? pagination.currentPage + 5 : 10
+                    pagination.currentPage > 5 ? pagination.currentPage + 5 : 10
                   )
                   .map((p, i) => (
                     <Text

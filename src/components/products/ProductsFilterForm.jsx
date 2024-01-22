@@ -7,72 +7,79 @@ import {
   Box,
   Divider,
   Select,
+  RangeSlider,
+  RangeSliderTrack,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
+  RangeSliderMark,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { FaStar } from "react-icons/fa";
 
-import { useDispatch, useSelector } from "react-redux";
-import { filterProducts } from "../../pages/Products/ProductsSlice";
+
+import { FaStar } from "react-icons/fa";
+import { MdGraphicEq } from 'react-icons/md'
+
+import { useState } from "react";
+import { useProductStore } from "../../pages/Products/useProductStore";
 
 export default function ProductsFiltersForm() {
 
-  const dispatch = useDispatch()
-  const filters = useSelector((state) => state.products.filters)
+  const { filters, setFilters } = useProductStore((state) => state)
 
   const [rating, setRating] = useState(2)
   const [form, setForm] = useState({
-    minPrice: 0,
-    maxPrice: 100000
+    minPrice: 150,
+    maxPrice: 499999
   })
-  function handleChange(e) {
+  function handleMinMaxChange(e) {
+    const minPrice = Math.round(49999 * (Number(e[0]) / 100))
+    const maxPrice = Math.round(49999 * (Number(e[1]) / 100))
     setForm({
-      ...form,
-      [e.target.name]: Number(e.target.value)
+      minPrice: minPrice,
+      maxPrice: maxPrice,
     })
   }
 
   function search() {
-    const d = {
+    setFilters({
       ...filters,
       ...form,
       rating
-    }
-    dispatch(filterProducts(d))
+    })
   }
 
-  const priceRange = [
-    150, 250, 500, 1000, 1500, 2500, 5000, 10000, 15000, 25000,
-  ];
   return (
     <Stack py={8} spacing={2}>
-      <FormControl>
-        <FormLabel>Price</FormLabel>
-        <Flex columnGap={"1rem"}>
-          <Select
-            name="minPrice"
-            value={form.minPrice}
-            onChange={(e) => handleChange(e)}
-          >
-            {priceRange.slice(0, 5).map((v, i) => (
-              <option key={i} value={v}>
-                {v}
-              </option>
-            ))}
-          </Select>
 
-          <Select
-            name="maxPrice"
-            value={form.maxPrice}
-            onChange={(e) => handleChange(e)}
-          >
-            {priceRange.slice(6, 10).map((v, i) => (
-              <option key={i} value={v}>
-                {v}
-              </option>
-            ))}
-          </Select>
+      <FormControl>
+        <Flex justifyContent={"space-evenly"}>
+          <Box bg="green.200" px={4} py={1} borderRadius={"md"}>{form.minPrice}</Box>
+          <Box bg="orange.200" px={4} py={1} borderRadius={"md"}>{form.maxPrice}</Box>
         </Flex>
       </FormControl>
+      <FormControl
+        py={2} px={4}
+      >
+        <RangeSlider
+          defaultValue={[1, 30]}
+          onChangeStart={handleMinMaxChange}
+          onChangeEnd={handleMinMaxChange}
+          step={1}
+          min={.25}
+        >
+          <RangeSliderTrack>
+            <RangeSliderFilledTrack />
+          </RangeSliderTrack>
+          <RangeSliderThumb index={0}>
+            <Box color='tomato' as={MdGraphicEq} />
+          </RangeSliderThumb>
+          <RangeSliderThumb index={1} >
+            <Box color='tomato' as={MdGraphicEq} />
+          </RangeSliderThumb>
+        </RangeSlider>
+        <FormLabel >Price</FormLabel>
+      </FormControl>
+
+
       <Button onClick={search} size="sm">
         Search
       </Button >
@@ -99,7 +106,7 @@ export default function ProductsFiltersForm() {
             >
               {s}
               {[...Array(s).keys()].map((v, j) => (
-                <Flex key={j} p={1}>
+                <Flex key={v} p={1}>
                   <FaStar key={j} />
                 </Flex>
               ))}

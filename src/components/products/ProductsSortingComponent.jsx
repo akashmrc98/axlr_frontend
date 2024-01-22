@@ -3,12 +3,13 @@ import { useState } from "react";
 import { Flex, Tag } from "@chakra-ui/react";
 import { GoSortAsc, GoSortDesc } from 'react-icons/go'
 
-import { useDispatch } from "react-redux";
-import { sortProductsByRatings, sortProductsByPrice } from "../../pages/Products/ProductsSlice";
+import { ProductsApi } from '../../pages/Products/ProductsApi'
+import { useProductStore } from "../../pages/Products/useProductStore";
+
 
 export default function ProductsSortingComponent() {
 
-  const dispatch = useDispatch()
+  const { setProducts, products } = useProductStore((state) => state)
 
   const [priceSort, setPriceSort] = useState("asc")
   const [ratingSort, setRatingSort] = useState("asc")
@@ -17,12 +18,14 @@ export default function ProductsSortingComponent() {
     if (priceSort === "asc") setPriceSort("desc");
     else if (priceSort === "desc") setPriceSort("asc");
     else setPriceSort("asc");
-    dispatch(sortProductsByPrice(priceSort))
+    setProducts(ProductsApi.sortProductsByPrice(products, priceSort))
+
   }
   function sortByRatings() {
-    if (ratingSort === "asc") setRatingSort("desc"); else if (ratingSort === "desc") setRatingSort("asc");
+    if (ratingSort === "asc") setRatingSort("desc");
+    else if (ratingSort === "desc") setRatingSort("asc");
     else setRatingSort("asc");
-    dispatch(sortProductsByRatings(ratingSort))
+    setProducts(ProductsApi.sortProductsByRating(products, ratingSort))
   }
 
   return <Flex columnGap={".5rem"} alignItems="center">

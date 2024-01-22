@@ -1,18 +1,18 @@
-import { Provider } from 'react-redux'
 import { ChakraProvider } from "@chakra-ui/react";
 
-import { store } from './store/store';
 import { theme } from "./config/theme";
 
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-
 import Upload from "./pages/Upload";
 import Products from "./pages/Products/Products";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const router = createBrowserRouter([
   {
@@ -33,13 +33,17 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <Provider store={store}>
-      <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+
         <RouterProvider router={router} />
-      </ChakraProvider>
-    </Provider>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </ChakraProvider>
   );
 }
 

@@ -1,43 +1,23 @@
-import { Box, Divider, Flex, Grid, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Grid, } from "@chakra-ui/react";
 
 import ProductsSortingComponent from "../../components/products/ProductsSortingComponent";
-import ProductsListComponent from "../../components/products/ProductsListComponent";
 import ProductsFiltersForm from "../../components/products/ProductsFilterForm";
-import ProductsSearchForm from "../../components/products/ProductsSearchForm";
+import ProductCountComponent from "../../components/products/ProductCountComponent";
+import ProductsListComponent from "../../components/products/ProductsListComponent";
 import ProductsPagination from "../../components/products/ProductsPagination";
+import ProductsSearchForm from "../../components/products/ProductsSearchForm";
 import Navbar from "../../components/common/Navbar";
 
-import { useSelector } from 'react-redux'
 
-import { useProducts } from "./useProducts";
-import { useProductsPagination } from "./useProductsPagination";
 import ProductsLoader from "../../components/products/ProductsLoader";
 
+import { useProductsQuery } from "./useProductsQuery";
+import { useProductsPaginationQuery } from "./useProductsPaginationQuery";
 
 export default function Products() {
 
-  const LIMIT = 40
-  const pagination = useSelector((state) => state.products.pagination.data)
-  const filters = useSelector((state) => state.products.filters)
-
-  const resultsLabel = `Showing page ${pagination.currentPage} - ${pagination.totalPages}, ${pagination.currentPage * LIMIT - 39}-${pagination.totalPages * LIMIT
-    } Results of ${pagination.pages.length * LIMIT}.`
-
-  const { loading } = useProducts({
-    page: pagination.currentPage,
-    query: filters.query,
-    rating: filters.rating,
-    minPrice: filters.minPrice,
-    maxPrice: filters.maxPrice
-  })
-
-  useProductsPagination({
-    page: pagination.currentPage,
-    query: filters.query,
-    rating: filters.rating,
-    minPrice: filters.minPrice,
-    maxPrice: filters.maxPrice
-  })
+  const products = useProductsQuery()
+  const pagination = useProductsPaginationQuery()
 
   return (
     <Box>
@@ -48,24 +28,26 @@ export default function Products() {
         py={4}
         h="100%"
       >
+        {products.status === "success" && <ProductsFiltersForm />}
         <Box>
-          <ProductsFiltersForm />
-        </Box>
-        <Box>
-          <Flex px={6} justifyContent={"space-between"}>
-            <Text>{resultsLabel}</Text>
-            <Box>
-              <ProductsSearchForm />
-              <ProductsSortingComponent />
-            </Box>
+          <Flex w="80%" mx="auto" alignItems={"center"} justifyContent={"space-between"}>
+            {products.status === "success" && <ProductCountComponent />}
+            {products.status === "success" &&
+              <Box py={4}>
+                <ProductsSearchForm />
+                <ProductsSortingComponent />
+              </Box>
+            }
           </Flex>
           <Divider mx="auto" w="80%" />
-          {loading ? <ProductsLoader /> : <ProductsListComponent />}
-
+          {products.status === "pending" && <ProductsLoader />}
+          {products.status === "success" && <ProductsListComponent />}
         </Box>
         <Divider mx="auto" w="80%" />
-        <ProductsPagination />
+        {pagination.status === "pending" && <ProductsLoader />}
+        {pagination.status === "success" && <ProductsPagination />}
       </Grid>
     </Box>
-  );
+
+  )
 }

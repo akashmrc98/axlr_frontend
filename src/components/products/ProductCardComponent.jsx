@@ -8,11 +8,11 @@ export default function ProductCardComponent({ imageUrl, rating, price, title })
     justifyContent="space-between"
     p={4}
     _hover={{
-      boxShadow: "md",
+      boxShadow: "lg",
       transform: "scale(1.04)",
     }}
     transition="all 200ms ease-in-out"
-    boxShadow={"xl"}
+    boxShadow={"sm"}
     cursor={"pointer"}
     borderRadius="xl"
   >

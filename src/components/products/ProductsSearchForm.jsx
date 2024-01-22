@@ -8,18 +8,15 @@ import { useState } from "react";
 
 import { FaSearch } from "react-icons/fa";
 
-import { useDispatch, useSelector } from "react-redux";
-import { filterProducts } from "../../pages/Products/ProductsSlice";
+import { useProductStore } from "../../pages/Products/useProductStore";
 
 export default function ProductsSearchForm() {
 
-  const dispatch = useDispatch()
-  const filters = useSelector((state) => state.products.filters)
-
+  const { filters, setFilters } = useProductStore((state) => state)
   const [query, setQuery] = useState("")
 
   return (
-    <Stack py={6} spacing={4}>
+    <Stack py={2} spacing={4}>
       <InputGroup
         display={"flex"}
         justifyContent="center"
@@ -36,7 +33,7 @@ export default function ProductsSearchForm() {
           placeholder="Search...."
           onKeyDown={(e) => {
             if (e.key === "Enter")
-              dispatch(filterProducts({ ...filters, query: query }))
+              setFilters({ ...filters, query: query })
           }}
         />
       </InputGroup>
